@@ -1,0 +1,177 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>ヒープソート可視化プログラム</title>
+</head>
+<body>
+
+<style type="text/css">
+h1 {
+  padding: 0.5em;/*文字周りの余白*/
+  color: #494949;/*文字色*/
+  background: #fffaf4;/*背景色*/
+  border-left: solid 5px #ffaf58;/*左線（実線 太さ 色）*/
+}
+</style>
+<h1>ヒープ作成</h1>
+配列（２分木）をヒープの形にします。整数のみ対応しています。<br>
+ソートしたい配列を「半角数字で」入力してください。
+<form name = "makeTree" id = "makeTree">
+[ 0]&ensp; <input type="text" id = "data00" name= "data00" size=20>
+[ 1]&ensp; <input type="text" id = "data01" name= data01 size=20>
+[ 2]&ensp; <input type="text" id = "data02" name= data02 size=20>
+[ 3]&ensp; <input type="text" id = "data03" name= data03 size=20>
+[ 4]&ensp; <input type="text" id = "data04" name= data04 size=20><br>
+[ 5]&ensp; <input type="text" id = "data05" name= data05 size=20>
+[ 6]&ensp; <input type="text" id = "data06" name= data06 size=20>
+[ 7]&ensp; <input type="text" id = "data07" name= data07 size=20>
+[ 8]&ensp; <input type="text" id = "data08" name= data08 size=20>
+[ 9]&ensp; <input type="text" id = "data09" name= data09 size=20><br>
+[10]&ensp; <input type="text" id = "data10" name= data10 size=20>
+[11]&ensp; <input type="text" id = "data11" name= data11 size=20>
+[12]&ensp; <input type="text" id = "data12" name= data12 size=20>
+[13]&ensp; <input type="text" id = "data13" name= data13 size=20>
+[14]&ensp; <input type="text" id = "data14" name= data14 size=20><br>
+<input type="button" id = "doheap" value="作成！">
+</form>
+<!--
+<form id="proc">
+    途中過程出力
+	<input name="check_p" type="radio" value="yes"> はい
+	<input name="check_p" type="radio" value="no" checked="checked"> いいえ
+</form>
+-->
+<div id="result"></div>
+<font size="7">
+<div id = "result00" name= "result00" style="position:absolute; top:350px; left:400px;"><font size="7"></font></div>
+<div id = "result01" name= "result01" style="position:absolute; top:420px; left:200px;"><font size="7"></font></div>
+<div id = "result02" name= "result02" style="position:absolute; top:420px; left:600px;"><font size="7"></font></div>
+<div id = "result03" name= "result03" style="position:absolute; top:490px; left:100px;"><font size="7"></font></div>
+<div id = "result04" name= "result04" style="position:absolute; top:490px; left:300px;"><font size="7"></font></div>
+<div id = "result05" name= "result05" style="position:absolute; top:490px; left:500px;"><font size="7"></font></div>
+<div id = "result06" name= "result06" style="position:absolute; top:490px; left:700px;"><font size="7"></font></div>
+<div id = "result07" name= "result07" style="position:absolute; top:560px; left:50px;"><font size="7"></font></div>
+<div id = "result08" name= "result08" style="position:absolute; top:560px; left:150px;"><font size="7"></font></div>
+<div id = "result09" name= "result09" style="position:absolute; top:560px; left:250px;"><font size="7"></font></div>
+<div id = "result10" name= "result10" style="position:absolute; top:560px; left:350px;"><font size="7"></font></div>
+<div id = "result11" name= "result11" style="position:absolute; top:560px; left:450px;"><font size="7"></font></div>
+<div id = "result12" name= "result12" style="position:absolute; top:560px; left:550px;"><font size="7"></font></div>
+<div id = "result13" name= "result13" style="position:absolute; top:560px; left:650px;"><font size="7"></font></div>
+<div id = "result14" name= "result14" style="position:absolute; top:560px; left:750px;"><font size="7"></font></div>
+</font>
+
+<script>
+        function swap(data,x1,x2) {
+            let tmp = data[x1];
+            data[x1] = data[x2];
+            data[x2] = tmp;
+        }
+
+        function sleep(waitMsec) {
+            var startMsec = new Date();
+
+            // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
+            while (new Date() - startMsec < waitMsec);
+        }
+
+        //0埋め（木構造出力に利用）
+        function padding0(num){
+            return ('00' + num).slice(-2);
+        }
+
+        //結果を配列方式で
+        function outputArray(data) {
+            let result = "結果：[ "
+            for(var i = 0; i < data.length; i += 1) {
+                result = result + data[i] + " ";
+            }
+            result = result + " ]"
+            return result;
+        }
+
+        //結果を木構造で
+        function outputTree(data) {
+            let result = ""
+            for(var i = 0; i < data.length; i += 1) {
+                target = document.getElementById("result" + padding0(i));
+                target.innerHTML = String(data[i]);;
+            }
+        }
+
+        // 途中経過出力するやつ（未実装）
+        function outputTreeWait(data) {
+            let result = ""
+            for(let i = 0; i < data.length; i += 1) {
+                target = document.getElementById("result" + padding0(i));
+                target.innerHTML = String(data[i]);
+            }
+            sleep(1000); // 1秒ごとに
+        }
+
+        //配列をヒープにする
+        function makeHeap(data,n) {
+
+            // ここ３行も途中経過出力用（未実装）
+            //let elem = document.getElementById( "proc" ) ;
+            //let radioNodeList = elem.check_p ;
+            //let isProc = radioNodeList.value ;
+            let max = Math.floor((n - 1) / 2);
+            console.log("n = ",n,"max = ",max);
+            let k;
+            for(let i = max; i >= 0; i -= 1) {
+                k = i;
+                console.log("i = ",i," k = ",k);
+                while(k * 2 + 2 <= n + 1) {
+                    if (k * 2 + 2 == n + 1) {
+                        console.log("KOKO TSUKA2");
+                        if(data[k*2+1] > data[k]) {
+                            console.log("KOKO TSUKA");
+                            swap(data,k,k*2+1);
+                        }
+                        break;
+                    }
+                    else {
+                        console.log(data[k*2+1], " vs ", data[k*2+2], "res: ", data[k*2+1] > data[k*2+2])
+                        if (data[k*2+1] > data[k*2+2]) {
+                            if(data[k*2+1] > data[k]) {
+                                swap(data,k,k*2+1);
+                                console.log(outputArray(data)," ->1");
+                                console.log("k = ",k," i = ", i);
+                            }
+                            k = k * 2 + 1;
+                        }
+                        else {
+                            if(data[k*2+2] > data[k]) {
+                                swap(data,k,k*2+2);
+                                console.log(outputArray(data)," ->2");
+                                console.log("k = ",k," i = ", i);
+                            }
+                            k = k * 2 + 2;
+                        }
+                    }
+                }
+            }
+        }
+        document.getElementById("doheap").onclick = function() {
+            target = document.getElementById("result");
+
+            let f = document.makeTree;
+            let data = []
+        	for(let i = 0 ; i < f.elements.length ; i++){
+        		if(f.elements[i].type=='text' && ! isNaN(f.elements[i].value) && f.elements[i].value != ""){
+                    data[i] = parseInt(f.elements[i].value, 10);
+        		}
+                else {
+                    break;
+                }
+        	}
+            makeHeap(data,data.length-1);
+            target.innerHTML = outputArray(data);
+            outputTree(data);
+
+        }
+
+</script>
+
+</body>
+</html>
