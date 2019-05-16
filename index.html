@@ -34,6 +34,16 @@ h1 {
 [14]&ensp; <input type="text" id = "data14" name= data14 size=20><br>
 <input type="button" id = "doheap" value="作成！">
 </form>
+<div id="result"></div>
+<!-- admax -->
+<br><br><br><br><br><br><br><br><br><br>
+<!-- shinobi ct2 -->
+<script type="text/javascript" src="//ct2.shinobi.jp/sc/1745386"></script>
+<noscript><a href="//ct2.shinobi.jp/gg/1745386"><img src="//ct2.shinobi.jp/ll/1745386" border="0" alt="カウンター" /></a></noscript>
+<!-- /shinobi ct2 -->
+<br><br>
+<script src="//adm.shinobi.jp/s/3901017b3d1670fe96ee9a7081e35507"></script>
+<!-- admax -->
 <!--
 <form id="proc">
     途中過程出力
@@ -41,7 +51,7 @@ h1 {
 	<input name="check_p" type="radio" value="no" checked="checked"> いいえ
 </form>
 -->
-<div id="result"></div>
+
 <font size="7">
 <div id = "result00" name= "result00" style="position:absolute; top:350px; left:400px;"><font size="7"></font></div>
 <div id = "result01" name= "result01" style="position:absolute; top:420px; left:200px;"><font size="7"></font></div>
@@ -89,9 +99,17 @@ h1 {
             return result;
         }
 
+        function initTree() {
+            for(var i = 0; i < 15; i += 1) {
+                target = document.getElementById("result" + padding0(i));
+                target.innerHTML = "";
+            }
+        }
+
         //結果を木構造で
         function outputTree(data) {
             let result = ""
+            initTree();
             for(var i = 0; i < data.length; i += 1) {
                 target = document.getElementById("result" + padding0(i));
                 target.innerHTML = String(data[i]);;
@@ -110,7 +128,6 @@ h1 {
 
         //配列をヒープにする
         function makeHeap(data,n) {
-
             // ここ３行も途中経過出力用（未実装）
             //let elem = document.getElementById( "proc" ) ;
             //let radioNodeList = elem.check_p ;
