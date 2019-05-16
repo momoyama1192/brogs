@@ -1,6 +1,5 @@
 def makeHeap(data,n)
     max = (n - 1) / 2
-
     (max).downto(0) do |i|
         k = i #kが親ノード
         while k * 2 + 2 <= n + 1 #葉がなくなるまでループ
@@ -13,11 +12,15 @@ def makeHeap(data,n)
                 if data[k*2+1] > data[k*2+2]
                     if data[k*2+1] > data[k]
                         data[k],data[k*2+1] = data[k*2+1],data[k]
+                    else
+                        break
                     end
                     k = k * 2 + 1 # 新たな親ノード
                 else
                     if data[k*2+2] > data[k]
                         data[k],data[k*2+2] = data[k*2+2],data[k]
+                    else
+                        break
                     end
                     k = k * 2 + 2 # 新たな親ノード
                 end
