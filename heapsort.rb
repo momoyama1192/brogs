@@ -1,5 +1,8 @@
 def makeHeap(data,n)
     max = (n - 1) / 2
+    if n != data.length - 1
+        max = 0 # 初回以外は最初のノード以外のチェックは不要
+    end
     (max).downto(0) do |i|
         k = i #kが親ノード
         while k * 2 + 2 <= n + 1 #葉がなくなるまでループ
@@ -46,6 +49,7 @@ end
 
 data = [17,-1,13,3,7,6,21,4,3,18,3,14] #ソートする配列
 
+
 (data.length-1).downto(1) do |i|
     makeHeap(data,i) #ヒープをつくる
     print " 0～#{sprintf("%2d",i)}のヒープ構築："
@@ -54,5 +58,6 @@ data = [17,-1,13,3,7,6,21,4,3,18,3,14] #ソートする配列
     print "交換　#{sprintf("%2d",i)}をヒープへ："
     printArray(data)
 end
+
 print "最終結果："
 printArray(data)
