@@ -34,26 +34,26 @@ h1 {
 [14]&ensp; <input type="text" id = "data14" name= data14 size=20><br>
 <input type="button" id = "doheap" value="作成！">
 </form>
+<form id="order">
+    ヒープ順序[ソート順序と逆なので注意！]
+	<input name="check_p" type="radio" value="asc"> 昇順
+	<input name="check_p" type="radio" value="des" checked="check"> 降順
+</form>
 <div id="result"></div>
 <!-- admax -->
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<!-- shinobi ct2 -->
-<p align = "right">
-<script type="text/javascript" src="//ct2.shinobi.jp/sc/1745386"></script>
-<noscript><a href="//ct2.shinobi.jp/gg/1745386"><img src="//ct2.shinobi.jp/ll/1745386" border="0" alt="カウンター" /></a></noscript>
-<!-- /shinobi ct2 -->
+<!--カウンタータグここから-->
+<table title="＠無料アクセスカウンター" summary="＠無料アクセスカウンター" border="0" cellpadding="0" cellspacing="1" style="border:#ffffff 1px dotted;"><tr><td><table border="0" cellspacing="1" cellpadding="0"><tr><td align="left"></tr><tr><td align="center"><script type="text/javascript"> document.write('<script src="http://blog-counter.biz/acs.php?');document.write('r='+document.referrer+'&p='+document.location.href);document.write('&t=0059&m=3"><\/script>');</script></td></tr><tr><td align="left"></tr></table></td></tr></table>
+
+<!--カウンタータグここまで-->
 <br><br>
 <script src="//adm.shinobi.jp/s/3901017b3d1670fe96ee9a7081e35507"></script>
 </p>
 <!-- admax -->
-<!--
-<form id="proc">
-    途中過程出力
-	<input name="check_p" type="radio" value="yes"> はい
-	<input name="check_p" type="radio" value="no" checked="checked"> いいえ
-</form>
--->
+
+
+
 
 <font size="7">
 <div id = "result00" name= "result00" style="position:absolute; top:350px; left:400px;"><font size="7"></font></div>
@@ -132,9 +132,15 @@ h1 {
         //配列をヒープにする
         function makeHeap(data,n) {
             // ここ３行も途中経過出力用（未実装）
-            //let elem = document.getElementById( "proc" ) ;
-            //let radioNodeList = elem.check_p ;
-            //let isProc = radioNodeList.value ;
+            let elem = document.getElementById( "order" ) ;
+            let radioNodeList = elem.check_p ;
+            let order = radioNodeList.value ;
+            console.log(order);
+            if(order == "des") {
+                for(let i = 0; i < data.length; i += 1) {
+                    data[i] *= -1;
+                }
+            }
             let max = Math.floor((n - 1) / 2);
             console.log("n = ",n,"max = ",max);
             let k;
@@ -169,6 +175,11 @@ h1 {
                             k = k * 2 + 2;
                         }
                     }
+                }
+            }
+            if(order == "des") {
+                for(let i = 0; i < data.length; i += 1) {
+                    data[i] *= -1;
                 }
             }
         }
